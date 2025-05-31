@@ -1,1 +1,62 @@
-<!-- Replace this with your actual UI HTML file -->
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-100">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GPT Repo Updater UI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: { colors: { primary: '#4F46E5', secondary: '#6366F1' }, },
+      },
+    };
+  </script>
+</head>
+<body class="h-full flex items-center justify-center">
+  <main class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <h1 class="text-2xl font-bold text-primary mb-4">GPT Repo Updater</h1>
+    <form id="repo-form" class="space-y-4">
+      <div>
+        <label for="repo-name" class="block text-sm font-medium text-gray-700">Repository Name</label>
+        <input type="text" id="repo-name" name="repo-name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" placeholder="e.g., user/repo" />
+      </div>
+      <div>
+        <label for="access-token" class="block text-sm font-medium text-gray-700">GitHub Access Token</label>
+        <input type="password" id="access-token" name="access-token" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" placeholder="Your GitHub PAT" />
+      </div>
+      <button type="submit" class="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-secondary focus:outline-none">Update Repository</button>
+    </form>
+    <div id="status-message" class="mt-4 text-sm text-gray-600"></div>
+  </main>
+  <script>
+    document.getElementById('repo-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const repoName = document.getElementById('repo-name').value.trim();
+      const accessToken = document.getElementById('access-token').value.trim();
+      const statusMessage = document.getElementById('status-message');
+      if (!repoName || !accessToken) {
+        statusMessage.textContent = 'Please provide both repository name and access token.';
+        return;
+      }
+      statusMessage.textContent = 'Processing...';
+      try {
+        // Change URL to your backend when ready
+        const response = await fetch('https://your-backend-endpoint.com/update-repo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ repoName }),
+        });
+        if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+        const result = await response.json();
+        statusMessage.textContent = `Success: ${result.message}`;
+      } catch (error) {
+        statusMessage.textContent = `Failed to update repository: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
